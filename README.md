@@ -13,7 +13,7 @@ This solution provides an open-source platform for building AI applications. If 
 
 ---
 <video width="600" controls>
-  <source src="/aistudio/docs/videos/intro.mov" type="video/mp4">
+  <source src="/aistudio/docs/videos/intro.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
 
