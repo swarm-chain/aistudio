@@ -116,17 +116,13 @@ pip install -e .
 
 ---
 
-## Step 2: LiveKit On-Premise Installation
+#### **Step 2: LiveKit and SIP Server On-Premise Installation**
+For setting up the LiveKit server and enabling SIP voice communication features, refer to the provided guides below. These guides will walk you through downloading, configuring, and running LiveKit and SIP server for real-time communication functionalities:
 
-For setting up the LiveKit server, refer to the guide provided [**here**](#). This will take you through downloading, configuring, and running LiveKit for real-time communication functionalities.
+- **[LiveKit On-Premise Installation Guide](#link-to-livikit-guide)**
+- **[SIP Server On-Premise Installation Guide](#link-to-sip-server-guide)**
 
----
-
-## Step 3: SIP Server On-Premise Installation
-
-To enable SIP voice communication features, follow the installation guide for SIP server configuration [**here**](#).
-
----
+--- 
 
 ## Step 4: Set Up the User Interface (UI)
 
