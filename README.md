@@ -332,8 +332,8 @@ The **Swarm AI Studio** team is focused on continuous improvement to enhance fun
 Swarm AI Studio integrates several powerful technologies:
 
 - **Groq**: The fastest large language model (LLM) processing system, offering unparalleled speed for AI model deployment.
-- **LlamaIndex**: As a versatile data management tool.
-- **LiveKit**: Optimized for retrieval-augmented generation (RAG), LlamaIndex enhances the application’s ability to access and generate relevant, contextually informed responses.
+- **LlamaIndex**: Optimized for retrieval-augmented generation (RAG), LlamaIndex enhances the application’s ability to access and generate relevant, contextually informed responses.
+- **LiveKit**: For real-time communication capabilities.
 
 ---
 
