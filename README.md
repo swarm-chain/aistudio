@@ -12,10 +12,8 @@
 This solution provides an open-source platform for building AI applications. If you require an on-premise solution, customization, or a secure app without third-party APIs, please contact us at **info@swarmchain.org**. We can assist you with setup and provide tailored solutions to meet your needs.
 
 ---
-<video width="600" controls>
-  <source src="/aistudio/docs/videos/intro.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+![Swarm AI Studio Introduction](/aistudio/docs/intro.gif)
+
 
 Welcome to the **Swarm AI Studio** installation guide! This document will guide you through setting up the backend server, SIP server, and the user interface (UI). The **Swarm AI Studio** leverages powerful technologies like **Groq**, **LlamaIndex**, and **LiveKit** for real-time communication and data management.
 
