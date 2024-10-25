@@ -1,3 +1,7 @@
+Here's the updated document with the "Update setup.py Entry Points" section removed:
+
+---
+
 # 🚧 Swarm AI Studio Installation Guide
 
 *This project is currently under active development. You might encounter some issues during setup or usage. We appreciate your understanding and welcome any feedback to improve the experience.*
@@ -12,9 +16,11 @@ This solution provides an open-source platform for building AI applications. If 
 
 ---
 
-Welcome to the **Swarm AI Studio** installation guide! This document will guide you through setting up the backend server, SIP server, and the user interface (UI). The **Swarm AI Studio** leverages powerful technologies such as **Groq**, **LlamaIndex**, and **LiveKit** to provide real-time communication and data management capabilities.
+Welcome to the **Swarm AI Studio** installation guide! This document will guide you through setting up the backend server, SIP server, and the user interface (UI). The **Swarm AI Studio** leverages powerful technologies like **Groq**, **LlamaIndex**, and **LiveKit** for real-time communication and data management.
 
 The code repository for **Swarm AI Studio** is available on GitHub: [swarm-chain/aistudio](https://github.com/swarm-chain/aistudio.git).
+
+---
 
 ## Table of Contents
 
@@ -51,7 +57,7 @@ cd aistudio
 
 ### 1.2 Create a Virtual Environment
 
-It's recommended to use a virtual environment to manage dependencies.
+It’s recommended to use a virtual environment to manage dependencies.
 
 ```bash
 python3 -m venv venv
@@ -94,21 +100,9 @@ DEEPGRAM_API_KEY=your_deepgram_api_key
 LIVEKIT_URL=ws://localhost:7880
 ```
 
-**Note:** Replace the placeholders (`your_mongo_user`, `your_openai_api_key`, etc.) with your actual credentials.
+**Note:** Replace placeholders (e.g., `your_mongo_user`, `your_openai_api_key`) with actual credentials.
 
-### 1.5 Update `setup.py` Entry Points
-
-Ensure your `setup.py` has the correct entry point:
-
-```python
-entry_points={
-    'console_scripts': [
-        'aistudio=app.cli:main',
-    ],
-},
-```
-
-### 1.6 Install the Swarm AI Studio Package
+### 1.5 Install the Swarm AI Studio Package
 
 ```bash
 pip install -e .
@@ -116,13 +110,14 @@ pip install -e .
 
 ---
 
-#### **Step 2: LiveKit and SIP Server On-Premise Installation**
-For setting up the LiveKit server and enabling SIP voice communication features, refer to the provided guides below. These guides will walk you through downloading, configuring, and running LiveKit and SIP server for real-time communication functionalities:
+## Step 2: LiveKit and SIP Server On-Premise Installation
 
-- **[LiveKit On-Premise Installation Guide](#link-to-livikit-guide)**
-- **[SIP Server On-Premise Installation Guide](#link-to-sip-server-guide)**
+For setting up the LiveKit server and enabling SIP voice communication features, refer to the guides below. These guides will walk you through downloading, configuring, and running LiveKit and the SIP server for real-time communication:
 
---- 
+- **[LiveKit On-Premise Installation Guide](https://github.com/swarm-chain/aistudio/blob/main/docs/livkit_server_setup.md)**
+- **[SIP Server On-Premise Installation Guide](https://github.com/swarm-chain/aistudio/blob/main/docs/livkit_sip_server_setup.md)**
+
+---
 
 ## Step 4: Set Up the User Interface (UI)
 
@@ -130,7 +125,7 @@ This section will guide you in setting up the Swarm Voice Agent and Swarm Bot pr
 
 ### 4.1 Clone the Repositories
 
-First, clone both repositories to your local machine:
+Clone both repositories to your local machine:
 
 ```bash
 # Clone Swarm Voice Agent repository
@@ -144,7 +139,7 @@ cd aistudio_vui_widget  # Swarm Bot directory
 
 ### 4.2 Install Dependencies
 
-You need to install the dependencies for both projects separately.
+Install the dependencies for both projects separately.
 
 **Swarm Voice Agent:**
 
@@ -192,7 +187,7 @@ ALLOWED_BOT_ORIGINS=[]
 NEXT_PUBLIC_BOT_LIVE_URL=http://localhost:5000  # Adjust the port if necessary
 ```
 
-**Note:** Refer to the `.env.example` file in the repository for additional details on what each variable does.
+**Note:** Refer to the `.env.example` file in the repository for details on each variable.
 
 #### Swarm Bot Environment Variables
 
@@ -251,8 +246,7 @@ Now, Swarm Bot will be accessible and can be integrated with the Swarm Voice Age
 Both projects are interdependent and must be configured correctly to interact:
 
 - **Swarm Voice Agent** relies on **Swarm Bot** for bot communication capabilities. Ensure that `NEXT_PUBLIC_BOT_LIVE_URL` in Swarm Voice Agent's `.env` file points to the correct URL of the Swarm Bot (e.g., `http://localhost:5000`).
-
-- **Swarm Bot** needs to communicate with the Swarm Voice Agent backend. Ensure that the `VITE_API_NEXT_backend` environment variable is correctly set to point to the Swarm Voice Agent's backend URL (`http://localhost:3000`).
+- **Swarm Bot** needs to communicate with the Swarm Voice Agent backend. Ensure that the `VITE_API_NEXT_backend` environment variable is correctly set to point to the Swarm Voice Agent’s backend URL (`http://localhost:3000`).
 
 ---
 
@@ -278,7 +272,7 @@ aistudio start agent
 
 - **Swarm AI Studio Backend API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
 - **Swarm Voice Agent UI:** [http://localhost:3000](http://localhost:3000)
-- **Swarm Bot UI:** Swarm Bot will be accessible through the Swarm Voice Agent interface.
+- **Swarm Bot UI:** Accessible through the Swarm Voice Agent interface.
 
 ---
 
@@ -287,16 +281,16 @@ aistudio start agent
 Swarm AI Studio integrates several powerful technologies:
 
 - **Groq**: For high-performance computing.
-- **LlamaIndex**: As a
-
- versatile data management tool.
+- **LlamaIndex**: As a versatile data management tool.
 - **LiveKit**: For real-time communication capabilities.
 
 ---
 
 ## Support
 
-For inquiries or support, please contact us at **info@swarmchain.org**.
+For inquiries or support,
+
+ please contact us at **info@swarmchain.org**.
 
 ---
 
