@@ -1,17 +1,9 @@
 import os
 import asyncio
-import logging
-import random
-import selectors
 import numpy as np
 from dotenv import load_dotenv
-from typing import Annotated
 from PIL import Image
-from llama_index.core import (
-    StorageContext,
-    load_index_from_storage,
-)
-from livekit import agents, rtc
+from livekit import rtc
 from livekit.agents import JobContext, JobRequest, WorkerOptions, cli,JobProcess,llm
 from livekit.agents.llm import (
     ChatContext,
