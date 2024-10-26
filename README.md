@@ -5,12 +5,22 @@
 
 ---
 
+# **ROADMAP**
+
+**Explore our plans and upcoming features for Swarm AI Studio!**  
+The full roadmap is available [here](https://github.com/swarm-chain/aistudio/blob/main/docs/road_map.md).
+
+---
+
+![Swarm AI Studio Introduction](docs/intro.gif)
+
+---
+
 ## Important Note
 
 **Swarm AI Studio** is an AI agent application designed to handle real-time interactions through phone calls, web-based voice user interfaces (VUI), and SIP capabilities. This open-source platform allows you to create advanced AI-driven communication systems. If you need an on-premise solution, customization, or a secure app setup without third-party APIs, please contact us at **info@swarmchain.org**. We are available to assist with setup and provide tailored solutions to meet your requirements.
 
 ---
-![Swarm AI Studio Introduction](docs/intro.gif)
 
 Welcome to the **Swarm AI Studio** installation guide! This document will guide you through setting up the backend server, SIP server, and the user interface (UI). The **Swarm AI Studio** leverages powerful technologies like **Groq**, a highly optimized LLM processing system, and **LlamaIndex** for retrieval-augmented generation (RAG) to provide real-time communication and data management.
 
@@ -260,7 +270,9 @@ aistudio start api
 
 ### 5.2 Start the Agent
 
-In another terminal window, activate your virtual environment and run:
+In
+
+ another terminal window, activate your virtual environment and run:
 
 ```bash
 aistudio start agent
@@ -268,9 +280,7 @@ aistudio start agent
 
 ### 5.3 Access the Application
 
-- **Swarm AI Studio Backend API Docs:** [http://localhost:8000/docs](
-
-http://localhost:8000/docs)
+- **Swarm AI Studio Backend API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
 - **Swarm Voice Agent UI:** [http://localhost:3000](http://localhost:3000)
 - **Swarm Bot UI:** Accessible through the Swarm Voice Agent interface.
 
