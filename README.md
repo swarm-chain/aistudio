@@ -5,23 +5,20 @@
 
 ---
 
+![Swarm AI Studio Introduction](docs/intro.gif)
+
+---
+## Important Note
+
+**Swarm AI Studio** is an AI agent application designed to handle real-time interactions through phone calls, web-based voice user interfaces (VUI), and SIP capabilities. This open-source platform allows you to create advanced AI-driven communication systems. If you need an on-premise solution, customization, or a secure app setup without third-party APIs, please contact us at **info@swarmchain.org**. We are available to assist with setup and provide tailored solutions to meet your requirements.
+
+---
 # **ROADMAP**
 
 **Explore our plans and upcoming features for Swarm AI Studio!**  
 The full roadmap is available [here](https://github.com/swarm-chain/aistudio/blob/main/docs/road_map.md).
 
 ---
-
-![Swarm AI Studio Introduction](docs/intro.gif)
-
----
-
-## Important Note
-
-**Swarm AI Studio** is an AI agent application designed to handle real-time interactions through phone calls, web-based voice user interfaces (VUI), and SIP capabilities. This open-source platform allows you to create advanced AI-driven communication systems. If you need an on-premise solution, customization, or a secure app setup without third-party APIs, please contact us at **info@swarmchain.org**. We are available to assist with setup and provide tailored solutions to meet your requirements.
-
----
-
 Welcome to the **Swarm AI Studio** installation guide! This document will guide you through setting up the backend server, SIP server, and the user interface (UI). The **Swarm AI Studio** leverages powerful technologies like **Groq**, a highly optimized LLM processing system, and **LlamaIndex** for retrieval-augmented generation (RAG) to provide real-time communication and data management.
 
 The code repository for **Swarm AI Studio** is available on GitHub: [swarm-chain/aistudio](https://github.com/swarm-chain/aistudio.git).
