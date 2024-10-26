@@ -1,5 +1,3 @@
-# app/cli.py
-
 import argparse
 import sys
 
@@ -9,7 +7,7 @@ def main():
 
     # Subcommand 'start'
     parser_start = subparsers.add_parser('start', help='Start the AI Studio application')
-    parser_start.add_argument('component', nargs='?', default='api', choices=['api', 'agent'], help='Component to start: api or agent')
+    parser_start.add_argument('component', nargs='?', default='api', choices=['api', 'agent', 'vision-agent'], help='Component to start: api, agent, or vision-agent')
 
     args = parser.parse_args()
 
@@ -18,6 +16,8 @@ def main():
             start_api()
         elif args.component == 'agent':
             start_agent()
+        elif args.component == 'vision-agent':
+            start_vision_agent()
         else:
             parser.error('Invalid component specified.')
     else:
@@ -32,6 +32,11 @@ def start_agent():
     # Start the agent
     import subprocess
     subprocess.run(['python', 'app/agents/agent.py', 'start'])
+
+def start_vision_agent():
+    # Start the vision agent
+    import subprocess
+    subprocess.run(['python', 'app/agents/agent_vision.py', 'start'])
 
 if __name__ == '__main__':
     main()
