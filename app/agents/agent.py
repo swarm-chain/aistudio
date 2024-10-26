@@ -7,6 +7,7 @@ from livekit import rtc
 from livekit.agents import AutoSubscribe, JobContext, WorkerOptions, cli, llm, JobProcess
 from livekit.agents.voice_assistant import VoiceAssistant
 from livekit.plugins import deepgram, openai, silero
+from livekit.plugins.openai import LLM
 from llama_index.core import (
     StorageContext,
     load_index_from_storage,
@@ -18,7 +19,6 @@ import uuid
 import jwt
 from dotenv import load_dotenv
 
-from dotenv import load_dotenv
 import os
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -37,15 +37,10 @@ livekit_url = os.getenv("LIVEKIT_URL")
 livekit_api_key = os.getenv("LIVEKIT_API_KEY")
 livekit_api_secret = os.getenv("LIVEKIT_API_SECRET")
 deepgram_api_key = os.getenv("DEEPGRAM_API_KEY")
-# Debugging: print out the loaded values
-print(f"MONGO_USER: {mongo_user}")
-print(f"MONGO_PASSWORD: {mongo_password}")
-print(f"MONGO_HOST: {mongo_host}")
-print(f"OPENAI_API_KEY: {openai_api_key}")
-print(f"LIVEKIT_URL: {livekit_url}")
-print(f"LIVEKIT_API_KEY: {livekit_api_key}")
-print(f"LIVEKIT_API_SECRET: {livekit_api_secret}")
-print(f"DEEPGRAM_API_KEY: {deepgram_api_key}")
+
+database_name = "voice_ai_app_db"
+collection_name = "users"
+
 # Check if all required environment variables are loaded
 if not mongo_user or not mongo_password or not mongo_host:
     raise ValueError("MongoDB connection details are missing.")
@@ -189,6 +184,144 @@ async def _will_synthesize_assistant_reply(assistant: VoiceAssistant, chat_ctx: 
     return assistant.llm.chat(chat_ctx=chat_ctx)
 
 async def entrypoint(ctx: JobContext):
+    room = ctx.room
+    room_items = ctx.__dict__.items()
+    for key, value in room_items:
+        if key == "_info":
+            web_identity = decode_jwt_and_get_room(parse_running_job_info(value)["token"])
+            break
+    await ctx.connect(auto_subscribe=AutoSubscribe.AUDIO_ONLY)
+    phone_number = None
+    caller_id = None
+    for rp in room.remote_participants.values():
+        caller_id = rp.identity
+        create_identity_folder(str(caller_id))        
+        try:
+            phone_number = rp.attributes['sip.trunkPhoneNumber']
+            print(f"Phone number: {phone_number}")
+            break
+        except KeyError:
+            print("Phone number not found in attributes, so using web app identity: " + web_identity)
+            phone_number = web_identity
+
+    # Get assistant data based on phone number
+    assistant_data, persist_dir = get_assistant_data(phone_number)
+    print(assistant_data)
+    if not assistant_data:
+        return  # Terminate the process if no assistant data is found
+
+    try:
+        # Mapping the relevant fields from assistant_data
+        system_prompt = assistant_data['system_prompt']
+        first_message = assistant_data['first_message']
+        language = assistant_data['language']
+        voice = assistant_data['voice']
+        max_tokens = assistant_data['max_tokens']
+        llm_provider = assistant_data.get('LLM_provider', 'openai')  # Default to 'openai'
+        llm_model = assistant_data.get('LLM_model', 'gpt-4')  # Default to 'gpt-4'
+        temperature = assistant_data.get('temperature', 0.7)
+        stt_provider = assistant_data.get('stt_provider', 'deepgram')  # Default STT provider
+        stt_model = assistant_data.get('stt_model', 'nova-phonecall')  # Default STT model
+        tts_provider = assistant_data.get('TTS_provider', 'openai')  # Default TTS provider
+        tts_speed = assistant_data.get('tts_speed', 1.10)
+        interrupt_speech_duration = assistant_data.get('interrupt_speech_duration', 0.35)
+    except KeyError as e:
+        print(f"Missing required assistant configuration field: {e}")
+        return
+
+    # Initialize the chat context with the system prompt
+    initial_ctx = llm.ChatContext().append(
+        role="system",
+        text=system_prompt
+    )
+
+    # Select the LLM provider based on assistant data (groq, openai, or other server-side providers)
+    if llm_provider == "groq":
+        llm_instance = LLM.with_groq(model=llm_model, api_key=os.getenv("GROQ_API_KEY"))
+    elif llm_provider == "server":
+        # Assuming "server" implies another provider setup (custom or internal server-side model)
+        llm_instance = LLM(model=llm_model, api_key=os.getenv("SERVER_LLM_API_KEY"))
+    else:
+        # Default to OpenAI if no LLM provider is specified or it's 'openai'
+        llm_instance = LLM(
+            model=llm_model,
+            api_key=openai_api_key,
+            temperature=temperature
+        )
+
+    # Select the STT provider based on assistant data
+    if stt_provider == "server":
+        stt_instance = CustomSTT(model=stt_model)  # Replace with appropriate server-side STT class
+    else:
+        stt_instance = deepgram.STT(model=stt_model, language=language)
+
+    # Select the TTS provider based on assistant data
+    if tts_provider == "server":
+        tts_instance = CustomTTS(voice=voice, speed=tts_speed)  # Replace with appropriate server-side TTS class
+    else:
+        tts_instance = openai.TTS(model="tts-1-hd", voice=voice, speed=tts_speed)
+
+    # Initialize the VoiceAssistant
+    assistant = VoiceAssistant(
+        interrupt_speech_duration=interrupt_speech_duration,
+        vad=ctx.proc.userdata["vad"],
+        stt=stt_instance,  # Use the dynamically selected STT instance
+        llm=llm_instance,  # Use the dynamically selected LLM instance
+        tts=tts_instance,  # Use the dynamically selected TTS instance
+        chat_ctx=initial_ctx,
+        will_synthesize_assistant_reply=None if not persist_dir else
+        lambda assistant, chat_ctx: _will_synthesize_assistant_reply(assistant, chat_ctx, persist_dir=persist_dir)
+    )
+
+    assistant.start(ctx.room)
+
+    chat = rtc.ChatManager(ctx.room)
+
+    async def answer_from_text(txt: str):
+        chat_ctx = assistant.chat_ctx.copy()
+        chat_ctx.append(role="user", text=txt)
+        stream = assistant.llm.chat(chat_ctx=chat_ctx)
+        await assistant.say(stream)
+
+    @chat.on("message_received")
+    def on_chat_received(msg: rtc.ChatMessage):
+        if msg.message:
+            asyncio.create_task(answer_from_text(msg.message))
+
+    log_queue = asyncio.Queue()
+
+    @assistant.on("user_speech_committed")
+    def on_user_speech_committed(msg: llm.ChatMessage):
+        if isinstance(msg.content, list):
+            msg.content = "\n".join(
+                "[image]" if isinstance(x, llm.ChatImage) else x for x in msg.content
+            )
+        log_queue.put_nowait(f"[{datetime.now()}] USER:\n{msg.content}\n\n")
+
+    @assistant.on("agent_speech_committed")
+    def on_agent_speech_committed(msg: llm.ChatMessage):
+        log_queue.put_nowait(f"[{datetime.now()}] AGENT:\n{msg.content}\n\n")
+
+    async def write_transcription(caller_id, phone_number):
+        generated_uuid = str(uuid.uuid4()) + "_" + str(phone_number)
+        file_name = f"logs/{caller_id}/{generated_uuid}.log"
+        async with open(file_name, "w") as f:
+            while True:
+                msg = await log_queue.get()
+                if msg is None:
+                    break
+                await f.write(msg)
+
+    write_task = asyncio.create_task(write_transcription(caller_id, phone_number))
+
+    async def finish_queue():
+        log_queue.put_nowait(None)
+        await write_task
+
+    ctx.add_shutdown_callback(finish_queue)
+
+    await assistant.say(first_message, allow_interruptions=True)
+
     room = ctx.room
     room_items = ctx.__dict__.items()
     for key, value in room_items:
