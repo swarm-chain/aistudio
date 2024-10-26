@@ -1,3 +1,6 @@
+Here's an updated **Swarm AI Studio Roadmap** document with a feature comparison table added at the end:
+
+---
 
 # Swarm AI Studio Roadmap
 
@@ -43,15 +46,41 @@ The **Swarm AI Studio** team is focused on continuous improvement to enhance fun
 - Expand support for **SMS** and **Email** communication alongside voice and video, allowing agents to reach users through preferred channels.
 - Unified inbox for tracking all communication channels, making it easier for agents to manage user interactions.
 
-### 10. Chat Log with Groq
-- Enable comprehensive **Chat Log** capabilities powered by Groq for fast processing and seamless log management.
-  
-### 11. Chat Support with Groq API
-- Integrate Groq API for enhanced chat support functionality, leveraging its speed for real-time response management.
+### 10. Automated Transcriptions and Summaries
+- Implement automated transcription and call summaries for voice and video interactions, facilitating easy review and follow-up.
+- Option for text-based sentiment analysis on transcripts to understand user sentiment in real-time.
 
-### 12. Twilio Support
-- Add **Twilio** integration to support SMS and call-based notifications, expanding outreach and engagement channels.
+### 11. Auto-Scheduling and Callback Features
+- Add an **Auto-Scheduling** feature to allow users to book calls or callbacks based on availability.
+- Callback management system for prioritizing follow-ups and missed calls.
 
-### 13. Custom SIP Support
-- Develop **Custom SIP Support** to allow users to integrate with proprietary or specific SIP servers, enhancing the flexibility of communication options.
+### 12. Integration with Knowledge Bases
+- Integrate with popular knowledge bases to allow the AI to pull answers and solutions from existing content.
+- Auto-suggest answers during calls, leveraging both internal and external resources to enhance support quality.
 
+---
+
+## Feature Comparison
+
+Below is a comparison of features available across **Swarm AI Studio** and other similar platforms.
+
+| Feature                           | Bland.ai | Vapi.ai | Swarm AI (Open Source) |
+|-----------------------------------|----------|---------|-------------------------|
+| Interruption Management           | ✔️       | ✔️      | ✔️                      |
+| AI-Powered Call Vision            | ❌       | ❌      | ✔️                      |
+| Emotional Intelligence            | ❌       | ✔️      | ❌                      |
+| Function Invocation               | ✔️       | ✔️      | ❌                      |
+| Zendesk Integration Support       | ❌       | ❌      | ✔️                      |
+| Zoho Chat Integration             | ❌       | ❌      | ✔️                      |
+| Custom Chat Form Builder          | ❌       | ❌      | ✔️                      |
+| User Privacy Controls             | ❌       | ❌      | ✔️                      |
+| Audio/Video Call Recording        | ❌       | ❌      | ❌                      |
+| Call Timeout Configuration        | ✔️       | ✔️      | ❌                      |
+| Automated Smart Call Disconnection| ✔️       | ✔️      | ❌                      |
+| Bulk Call Management              | ✔️       | ✔️      | ✔️                      |
+| Web-Based Voice User Interface (VUI) | ✔️    | ✔️      | ✔️                      |
+| Contextual Awareness              | ✔️       | ✔️      | ✔️                      |
+
+---
+
+This document outlines the roadmap and feature comparisons for **Swarm AI Studio**. Feedback and suggestions are always welcome as we strive to build a platform that meets our users' evolving needs.

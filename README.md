@@ -5,20 +5,23 @@
 
 ---
 
-![Swarm AI Studio Introduction](docs/intro.gif)
-
----
-## Important Note
-
-**Swarm AI Studio** is an AI agent application designed to handle real-time interactions through phone calls, web-based voice user interfaces (VUI), and SIP capabilities. This open-source platform allows you to create advanced AI-driven communication systems. If you need an on-premise solution, customization, or a secure app setup without third-party APIs, please contact us at **info@swarmchain.org**. We are available to assist with setup and provide tailored solutions to meet your requirements.
-
----
 # **ROADMAP**
 
 **Explore our plans and upcoming features for Swarm AI Studio!**  
 The full roadmap is available [here](https://github.com/swarm-chain/aistudio/blob/main/docs/road_map.md).
 
 ---
+
+![Swarm AI Studio Introduction](docs/intro.gif)
+
+---
+
+## Important Note
+
+**Swarm AI Studio** is an AI agent application designed to handle real-time interactions through phone calls, web-based voice user interfaces (VUI), and SIP capabilities. This open-source platform allows you to create advanced AI-driven communication systems. If you need an on-premise solution, customization, or a secure app setup without third-party APIs, please contact us at **info@swarmchain.org**. We are available to assist with setup and provide tailored solutions to meet your requirements.
+
+---
+
 Welcome to the **Swarm AI Studio** installation guide! This document will guide you through setting up the backend server, SIP server, and the user interface (UI). The **Swarm AI Studio** leverages powerful technologies like **Groq**, a highly optimized LLM processing system, and **LlamaIndex** for retrieval-augmented generation (RAG) to provide real-time communication and data management.
 
 The code repository for **Swarm AI Studio** is available on GitHub: [swarm-chain/aistudio](https://github.com/swarm-chain/aistudio.git).
@@ -263,19 +266,29 @@ In one terminal window, activate your virtual environment and run:
 
 ```bash
 aistudio start api
+
+
 ```
 
 ### 5.2 Start the Agent
 
-In
-
- another terminal window, activate your virtual environment and run:
+In another terminal window, activate your virtual environment and run:
 
 ```bash
 aistudio start agent
 ```
 
-### 5.3 Access the Application
+### 5.3 Start the Vision Agent
+
+The `vision-agent` feature provides additional capabilities for visual data processing, though it currently has limited functionality. Start it in a new terminal window:
+
+```bash
+aistudio start vision-agent
+```
+
+**Note:** The `vision-agent` is in its initial stages and currently offers limited functionality. Further updates will expand its capabilities.
+
+### 5.4 Access the Application
 
 - **Swarm AI Studio Backend API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
 - **Swarm Voice Agent UI:** [http://localhost:3000](http://localhost:3000)
@@ -323,10 +336,10 @@ tmux attach -t sip_log
 
 ### 6.3 Open a `tmux` Session for Swarm AI Studio
 
-To start the main `aistudio` app in a `tmux` session:
+To start the main `aistudio` app in a `tmux` session, replace the incorrect command with:
 
 ```bash
-tmux new-session -d -s aistudio "aistudio start"
+tmux new-session -d -s aistudio "aistudio start api"
 ```
 
 This will create a detached `tmux` session named `aistudio`. You can attach to this session using:
