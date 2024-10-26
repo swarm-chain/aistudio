@@ -13,6 +13,7 @@ The full roadmap is available [here](https://github.com/swarm-chain/aistudio/blo
 ---
 
 ![Swarm AI Studio Introduction](docs/intro.gif)
+[![Watch the Introduction Video](https://img.icons8.com/color/48/000000/play--v1.png)](https://drive.google.com/file/d/1iqWScapfpUKo1c9H-za5zYHXoJoM7GSg/view)
 
 ---
 
