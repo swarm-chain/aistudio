@@ -3,7 +3,7 @@
 
 *This project is currently under active development. You might encounter some issues during setup or usage. We appreciate your understanding and welcome any feedback to improve the experience.*
 
-![Swarm AI Studio Logo](https://swarm-agent-website.vercel.app/logo.png)
+![Swarm AI Studio Introduction](docs/intro.gif)
 
 ---
 
@@ -11,12 +11,9 @@
 
 **Swarm AI Studio** is an AI agent application designed to handle real-time interactions through phone calls, web-based voice user interfaces (VUI), and SIP capabilities. This open-source platform allows you to create advanced AI-driven communication systems. If you need an on-premise solution, customization, or a secure app setup without third-party APIs, please contact us at **info@swarmchain.org**. We are available to assist with setup and provide tailored solutions to meet your requirements.
 
-
 ---
-![Swarm AI Studio Introduction](docs/intro.gif)
 
-
-Welcome to the **Swarm AI Studio** installation guide! This document will guide you through setting up the backend server, SIP server, and the user interface (UI). The **Swarm AI Studio** leverages powerful technologies like **Groq**, **LlamaIndex**, and **LiveKit** for real-time communication and data management.
+Welcome to the **Swarm AI Studio** installation guide! This document will guide you through setting up the backend server, SIP server, and the user interface (UI). The **Swarm AI Studio** leverages powerful technologies like **Groq**, a highly optimized LLM processing system, and **LlamaIndex** for retrieval-augmented generation (RAG) to provide real-time communication and data management.
 
 The code repository for **Swarm AI Studio** is available on GitHub: [swarm-chain/aistudio](https://github.com/swarm-chain/aistudio.git).
 
@@ -30,7 +27,7 @@ The code repository for **Swarm AI Studio** is available on GitHub: [swarm-chain
 4. [Step 3: SIP Server On-Premise Installation](#step-3-sip-server-on-premise-installation)
 5. [Step 4: Set Up the User Interface (UI)](#step-4-set-up-the-user-interface-ui)
 6. [Step 5: Run Swarm AI Studio and UI](#step-5-run-swarm-ai-studio-and-ui)
-7. [Roadmap](#roadmap)
+7. [Step 6: Start Services in `tmux` Sessions](#step-6-start-services-in-tmux-sessions)
 8. [Credits](#credits)
 9. [Support](#support)
 
@@ -44,6 +41,7 @@ Before you begin, ensure you have the following installed on your system:
 - **MongoDB** (or access to a MongoDB instance)
 - **Node.js and npm** (for the UI)
 - **Git**
+- **tmux** (for managing multiple terminal sessions)
 
 ---
 
@@ -271,62 +269,73 @@ aistudio start agent
 
 ### 5.3 Access the Application
 
-- **Swarm AI Studio Backend API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Swarm AI Studio Backend API Docs:** [http://localhost:8000/docs](
+
+http://localhost:8000/docs)
 - **Swarm Voice Agent UI:** [http://localhost:3000](http://localhost:3000)
 - **Swarm Bot UI:** Accessible through the Swarm Voice Agent interface.
 
 ---
 
-## Roadmap
+## Step 6: Start Services in `tmux` Sessions
 
-The **Swarm AI Studio** team is focused on continuous improvement to enhance functionality, usability, and performance. Here are some upcoming initiatives:
+For continuous logging and management, we’ll start the following scripts in separate `tmux` sessions:
 
-1. **UI Improvements**
-   - Enhance
+1. **Chat Log Creation Service**
+2. **SIP Log Creation Service**
+3. **Swarm AI Studio App**
 
- the UI for a more intuitive and streamlined user experience.
-   - Update the Swarm Bot and Voice Agent interfaces for improved interactivity and responsiveness.
-   - Introduce customizable themes to allow users to personalize the interface.
+To do this, follow the instructions below.
 
-2. **Backend Optimization**
-   - Optimize backend code for faster processing and response times.
-   - Improve data handling and resource management to support larger workloads efficiently.
-   - Implement modular, microservices-based architecture for better scalability and performance.
+### 6.1 Open a `tmux` Session for Chat Log Creation
 
-3. **Code Enhancements**
-   - Regular code refactoring to improve maintainability and readability.
-   - Enhanced error handling and logging for smoother troubleshooting and debugging.
-   - Improve security protocols for managing API keys and sensitive data.
+Start `chat_log_creation.py` in a new `tmux` session:
 
-4. **Video Agent Support**
-   - Integrate a **Video Agent** feature that allows real-time video interactions, supporting both voice and visual communication.
-   - Implement screen sharing and recording functionalities for video calls, enhancing collaboration and support.
+```bash
+tmux new-session -d -s chat_log "python /app/log_service/chat_log_creation.py"
+```
 
-5. **Auto Call Disconnect Feature**
-   - Add an **Auto Call Disconnect** feature to terminate inactive or timed-out calls automatically, freeing resources and improving user experience.
-   - Customizable inactivity timeout settings to allow for flexibility in call handling.
+This will create a detached `tmux` session named `chat_log` running `chat_log_creation.py`. You can attach to this session using:
 
-6. **Freshdesk and CRM Integrations**
-   - Integrate with **Freshdesk** and other popular CRM platforms to streamline customer support workflows.
-   - Provide seamless data syncing between Swarm AI Studio and CRM systems to manage customer information, track interactions, and automate support processes.
+```bash
+tmux attach -t chat_log
+```
 
-7. **Improved Bot Training and Management**
-   - Add an **Interactive Bot Training** interface for easier model training and tuning.
-   - Enable multi-language support for the bot, expanding its usability to a global audience.
-   - Provide detailed analytics on bot interactions to improve bot training and performance tracking.
+### 6.2 Open a `tmux` Session for SIP Log Creation
 
-8. **Advanced Analytics and Insights**
-   - Develop an **Analytics Dashboard** for tracking metrics such as call duration, response times, user engagement, and conversion rates.
-   - Real-time insights for monitoring platform usage and making data-driven optimizations.
+Start `sip_log_creation.py` in a new `tmux` session:
 
-9. **Multi-Channel Communication Support**
-   - Expand support for **SMS** and **Email** communication alongside voice and video, allowing agents to reach users through preferred channels.
-   - Unified inbox for tracking all communication channels, making it easier for agents to manage user interactions.
+```bash
+tmux new-session -d -s sip_log "python /Users/kesavan/aistudio/app/log_service/sip_log_creation.py"
+```
 
-10. **Auto-Scheduling and Callback Features**
-    - Add an **Auto-Scheduling** feature to allow users to book calls or callbacks based on availability.
-    - Callback management system for prioritizing follow-ups and missed calls.
+This will create a detached `tmux` session named `sip_log` running `sip_log_creation.py`. You can attach to this session using:
 
+```bash
+tmux attach -t sip_log
+```
+
+### 6.3 Open a `tmux` Session for Swarm AI Studio
+
+To start the main `aistudio` app in a `tmux` session:
+
+```bash
+tmux new-session -d -s aistudio "aistudio start"
+```
+
+This will create a detached `tmux` session named `aistudio`. You can attach to this session using:
+
+```bash
+tmux attach -t aistudio
+```
+
+To view or manage any of these sessions, list them using:
+
+```bash
+tmux list-sessions
+```
+
+---
 
 ## Credits
 
