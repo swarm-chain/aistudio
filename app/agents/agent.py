@@ -235,12 +235,12 @@ async def entrypoint(ctx: JobContext):
         text=system_prompt
     )
 
-    # Select the LLM provider based on assistant data (groq, openai, or other server-side providers)
-    if llm_provider == "groq":
+    # Handle the LLM provider selection
+    if llm_provider == "server":
+        print("Custom LLM is selected. Please contact info@swarmchain.org for access to this feature.")
+        return
+    elif llm_provider == "groq":
         llm_instance = LLM.with_groq(model=llm_model, api_key=os.getenv("GROQ_API_KEY"))
-    elif llm_provider == "server":
-        # Assuming "server" implies another provider setup (custom or internal server-side model)
-        llm_instance = LLM(model=llm_model, api_key=os.getenv("SERVER_LLM_API_KEY"))
     else:
         # Default to OpenAI if no LLM provider is specified or it's 'openai'
         llm_instance = LLM(
@@ -249,15 +249,17 @@ async def entrypoint(ctx: JobContext):
             temperature=temperature
         )
 
-    # Select the STT provider based on assistant data
+    # Handle the STT provider selection
     if stt_provider == "server":
-        stt_instance = CustomSTT(model=stt_model)  # Replace with appropriate server-side STT class
+        print("Custom STT is selected. Please contact info@swarmchain.org for access to this feature.")
+        return
     else:
         stt_instance = deepgram.STT(model=stt_model, language=language)
 
-    # Select the TTS provider based on assistant data
+    # Handle the TTS provider selection
     if tts_provider == "server":
-        tts_instance = CustomTTS(voice=voice, speed=tts_speed)  # Replace with appropriate server-side TTS class
+        print("Custom TTS is selected. Please contact info@swarmchain.org for access to this feature.")
+        return
     else:
         tts_instance = openai.TTS(model="tts-1-hd", voice=voice, speed=tts_speed)
 
@@ -313,108 +315,6 @@ async def entrypoint(ctx: JobContext):
                 await f.write(msg)
 
     write_task = asyncio.create_task(write_transcription(caller_id, phone_number))
-
-    async def finish_queue():
-        log_queue.put_nowait(None)
-        await write_task
-
-    ctx.add_shutdown_callback(finish_queue)
-
-    await assistant.say(first_message, allow_interruptions=True)
-
-    room = ctx.room
-    room_items = ctx.__dict__.items()
-    for key, value in room_items:
-        if key == "_info":
-            web_identity = decode_jwt_and_get_room(parse_running_job_info(value)["token"])
-            break
-    await ctx.connect(auto_subscribe=AutoSubscribe.AUDIO_ONLY)
-    phone_number = None
-    caller_id = None
-    for rp in room.remote_participants.values():
-        caller_id = rp.identity
-        create_identity_folder(str(caller_id))        
-        try:
-            phone_number = rp.attributes['sip.trunkPhoneNumber']
-            print(f"Phone number: {phone_number}")
-            break
-        except KeyError:
-            print("Phone number not found in attributes so we using web app identity. "+web_identity)
-            phone_number = web_identity
-    
-    assistant_data, persist_dir = get_assistant_data(phone_number)
-    print(assistant_data)
-    if not assistant_data:
-        return  # If no assistant data is found, terminate the process
-
-    try:
-        system_prompt = assistant_data['system_prompt']
-        first_message = assistant_data['first_message']
-        language = assistant_data['language']
-        voice = assistant_data['voice']
-        max_tokens= assistant_data['max_tokens']
-    except KeyError as e:
-        print(f"Missing required assistant configuration field: {e}")
-        return
-
-    # Initialize the chat context
-    initial_ctx = llm.ChatContext().append(
-        role="system",
-        text=system_prompt
-    )
-
-    # Initialize the VoiceAssistant
-    assistant = VoiceAssistant(
-        interrupt_speech_duration=0.35,
-        vad=ctx.proc.userdata["vad"],
-        stt=deepgram.STT(model="nova-phonecall",language=language),
-        llm=openai.LLM(max_tokens=max_tokens),
-        tts=openai.TTS(model="tts-1-hd", voice=voice, speed=1.10),
-        chat_ctx=initial_ctx,
-        will_synthesize_assistant_reply=None if not persist_dir else
-        lambda assistant, chat_ctx: _will_synthesize_assistant_reply(assistant, chat_ctx, persist_dir=persist_dir)
-    )
-
-    assistant.start(ctx.room)
-
-    chat = rtc.ChatManager(ctx.room)
-
-    async def answer_from_text(txt: str):
-        chat_ctx = assistant.chat_ctx.copy()
-        chat_ctx.append(role="user", text=txt)
-        stream = assistant.llm.chat(chat_ctx=chat_ctx)
-        await assistant.say(stream)
-
-    @chat.on("message_received")
-    def on_chat_received(msg: rtc.ChatMessage):
-        if msg.message:
-            asyncio.create_task(answer_from_text(msg.message))
-
-    log_queue = asyncio.Queue()
-
-    @assistant.on("user_speech_committed")
-    def on_user_speech_committed(msg: llm.ChatMessage):
-        if isinstance(msg.content, list):
-            msg.content = "\n".join(
-                "[image]" if isinstance(x, llm.ChatImage) else x for x in msg.content
-            )
-        log_queue.put_nowait(f"[{datetime.now()}] USER:\n{msg.content}\n\n")
-
-    @assistant.on("agent_speech_committed")
-    def on_agent_speech_committed(msg: llm.ChatMessage):
-        log_queue.put_nowait(f"[{datetime.now()}] AGENT:\n{msg.content}\n\n")
-
-    async def write_transcription(caller_id,phone_number):
-        generated_uuid = str(uuid.uuid4())+"_"+str(phone_number)
-        file_name = f"logs/{caller_id}/{generated_uuid}.log"
-        async with open(file_name, "w") as f:
-            while True:
-                msg = await log_queue.get()
-                if msg is None:
-                    break
-                await f.write(msg)
-
-    write_task = asyncio.create_task(write_transcription(caller_id,phone_number))
 
     async def finish_queue():
         log_queue.put_nowait(None)
