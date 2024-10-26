@@ -1,6 +1,3 @@
-Here's an updated **Swarm AI Studio Roadmap** document with a feature comparison table added at the end:
-
----
 
 # Swarm AI Studio Roadmap
 
