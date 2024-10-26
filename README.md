@@ -9,7 +9,8 @@
 
 ## Important Note
 
-This solution provides an open-source platform for building AI applications. If you require an on-premise solution, customization, or a secure app without third-party APIs, please contact us at **info@swarmchain.org**. We can assist you with setup and provide tailored solutions to meet your needs.
+**Swarm AI Studio** is an AI agent application designed to handle real-time interactions through phone calls, web-based voice user interfaces (VUI), and SIP capabilities. This open-source platform allows you to create advanced AI-driven communication systems. If you need an on-premise solution, customization, or a secure app setup without third-party APIs, please contact us at **info@swarmchain.org**. We are available to assist with setup and provide tailored solutions to meet your requirements.
+
 
 ---
 ![Swarm AI Studio Introduction](docs/intro.gif)
